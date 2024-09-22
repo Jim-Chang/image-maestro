@@ -1,0 +1,45 @@
+# Ignore Python cache files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore git and version control
+.git
+.gitignore
+
+# Ignore logs
+logs
+*.log
+
+# Ignore test and documentation
+tests/
+docs/
+
+# Ignore development files
+*.dev
+*.bak
+*.swp
+*.swo
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore other folders
+.venv/
+.volume/
+.idea/
+docker/
+nginx/
+bin/
+
+# Ignore other files
+.python-version
+README.md
+set-python-path.sh
+.gitignore
+.dockerignore
+.env
+.env.prod
+.pre-commit-config.yaml

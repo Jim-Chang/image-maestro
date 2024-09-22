@@ -1,0 +1,15 @@
+services:
+  image-maestro:
+    build:
+      context: ../.
+      dockerfile: docker/Dockerfile
+    image: image-maestro
+    container_name: image-maestro
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    volumes:
+      - "./.env.prod:/app/.env.prod"
+    environment:
+      - RUNTIME_ENV=prod
+
