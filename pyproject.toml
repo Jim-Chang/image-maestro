@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "image-maestro"
+version = "0.1.0"
+description = ""
+authors = ["Jim <jim@koding.work>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.11.7"
+streamlit = "^1.38.0"
+langchain = "^0.3.0"
+langchain-google-genai = "^2.0.0"
+pydantic-settings = "^2.5.2"
+fal-client = "^0.4.1"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
