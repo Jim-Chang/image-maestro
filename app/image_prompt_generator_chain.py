@@ -1,11 +1,13 @@
 import textwrap
 from operator import itemgetter
 
+from langchain_anthropic import ChatAnthropic
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import ConfigurableField
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-from app.models import GoogleModel
+from app.models import GoogleModel, AnthropicModel
 
 
 class _Prompt:
@@ -42,7 +44,19 @@ class _Model:
             temperature=0.8,
         )
 
-        return gemini_15_model
+        claude3_sonnet_model = ChatAnthropic(
+            model=AnthropicModel.claude_3_5_sonnet_20240620,
+            temperature=0.8,
+            max_tokens=4000,
+        )
+
+        return claude3_sonnet_model.configurable_alternatives(
+            ConfigurableField(id="model"),
+            default_key=AnthropicModel.claude_3_5_sonnet_20240620,
+            **{
+                GoogleModel.gemini_15_pro_exp_0827: gemini_15_model,
+            },
+        )
 
 
 class _PromptTemplate:

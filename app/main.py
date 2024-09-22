@@ -1,6 +1,6 @@
 import streamlit as st
 
-from app.config import set_google_api_key, set_fal_api_key
+from app.config import set_google_api_key, set_fal_api_key, set_anthropic_api_key
 from app.image_generator import generate_image, ImageSize
 from app.image_prompt_generator_chain import run_image_prompt_generator_chain
 from app.models import FalAiModel
@@ -85,6 +85,7 @@ def main():
 
 if __name__ == "__main__":
     set_google_api_key()
+    set_anthropic_api_key()
     set_fal_api_key()
 
     st.set_page_config(layout="wide")

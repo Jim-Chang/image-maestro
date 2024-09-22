@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_nested_delimiter="__")
 
     gemini_api_key: str
+    anthropic_api_key: str
     fal_api_key: str
 
 
@@ -40,9 +41,13 @@ def get_settings() -> Settings:
 
 
 def set_google_api_key():
-    # for google gemini use
     cfg = get_settings()
     os.environ["GOOGLE_API_KEY"] = cfg.gemini_api_key
+
+
+def set_anthropic_api_key():
+    cfg = get_settings()
+    os.environ["ANTHROPIC_API_KEY"] = cfg.anthropic_api_key
 
 
 def set_fal_api_key():

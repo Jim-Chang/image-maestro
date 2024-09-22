@@ -12,6 +12,7 @@ langchain = "^0.3.0"
 langchain-google-genai = "^2.0.0"
 pydantic-settings = "^2.5.2"
 fal-client = "^0.4.1"
+langchain-anthropic = "^0.2.1"
 
 
 [tool.poetry.group.dev.dependencies]
