@@ -7,7 +7,10 @@ from PIL import Image, PngImagePlugin
 
 from app.config import set_google_api_key, set_fal_api_key, set_anthropic_api_key
 from app.image_generator import ImageSize, generate_image
-from app.image_prompt_generator_chain import run_image_prompt_generator_chain
+from app.image_prompt_generator_chain import (
+    run_image_prompt_generator_chain,
+    ImagePrompt,
+)
 from app.models import FalAiModel, AnthropicModel, GoogleModel
 
 
@@ -19,6 +22,7 @@ def add_to_user_input_history(user_input: str):
 
 def on_submit():
     user_input = st.session_state.get("user_input")
+    optimize_prompt = st.session_state.get("optimize_prompt")
     llm_mode = st.session_state.get("select_llm_model")
     image_model = st.session_state.get("select_image_model")
     image_size = st.session_state.get("select_image_size")
@@ -27,13 +31,16 @@ def on_submit():
     guidance_scale = st.session_state.get("guidance_scale")
 
     add_to_user_input_history(user_input)
-    st.session_state["user_input"] = ""
 
-    print("run image prompt generator chain...")
-    image_prompt = run_image_prompt_generator_chain(user_input, llm_mode)
+    if optimize_prompt:
+        print("run image prompt generator chain...")
+        image_prompt = run_image_prompt_generator_chain(user_input, llm_mode)
+        print("======= image_prompt =======")
+        print(image_prompt)
+    else:
+        image_prompt = ImagePrompt(english_prompt=user_input, chinese_prompt="")
+
     st.session_state["image_prompt"] = image_prompt
-    print("======= image_prompt =======")
-    print(image_prompt)
 
     print("generate image...")
     image_urls = generate_image(
@@ -101,7 +108,9 @@ def layout():
 
     with col_left:
         with st.form("chat_form"):
-            st.text_input("訊息", key="user_input")
+            st.text_area("訊息", key="user_input")
+            st.checkbox("優化 prompt", value=True, key="optimize_prompt")
+
             st.form_submit_button("發送", on_click=on_submit)
 
             st.selectbox(
