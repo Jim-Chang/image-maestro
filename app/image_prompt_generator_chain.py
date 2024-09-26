@@ -2,10 +2,11 @@ import textwrap
 from operator import itemgetter
 
 from langchain_anthropic import ChatAnthropic
-from langchain_core.output_parsers import StrOutputParser
+from langchain_core.output_parsers.pydantic import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import ConfigurableField
 from langchain_google_genai import ChatGoogleGenerativeAI
+from pydantic import BaseModel, Field
 
 from app.models import GoogleModel, AnthropicModel
 
@@ -13,25 +14,28 @@ from app.models import GoogleModel, AnthropicModel
 class _Prompt:
     system = textwrap.dedent(
         """
-        You are a visual artist, skilled at creating images.
-        - Please carefully review the user's needs and description, and design an image that fits their request.
-        - Describe the image in detail.
-        - Choose the style of the image—such as photography or painting—based on the user's context and needs, and specify the style in your description.
-        - If photography is chosen, specify the camera model, lens, film if need, according to the user's requirements.
-        - If the user provides specific settings, follow them exactly.
-        - Provide only the image description, avoiding mentioning unrelated details.
-        - Limit your response to no more than 20 sentences.
-        - Use American English for your description.
+        You're an artistic creator skilled in crafting visual scenes. 
+        Carefully review the user's needs and descriptions, then design and create a scene that meets their requirements. 
+        - Describe the scene in detail.
+        - Choose an appropriate style for the scene, such as photography or painting, based on the user's context and needs.
+        - Specify the style in your description. For photography, select a camera, digital or film format, and lens that fit the user's situation and requirements. 
+        - If the user specifies any settings, use those as given. 
+        - Provide only the scene description, avoiding unrelated topics. 
+        - Keep your response to 30 sentences or fewer.
+        - Use American English in your description, then provide a traditional Chinese translation of that description.
+        
+        <Example>
+        User's Request: 美國經典肌肉車，美國西部，韓國性感車模
+        Result: Vintage American muscle car, gleaming red 1969 Chevrolet Camaro SS, parked on a dusty road in the American West. Rugged desert landscape with towering red rock formations in the background. Golden hour sunlight casts long shadows. Korean female model in a silver sequined mini dress poses seductively on the car's hood, her long black hair flowing in the breeze. Captured with a Canon EOS R5 digital camera, 24-70mm f/2.8 lens. Cinematic color grading emphasizes warm tones and high contrast.
+        </Example>        
         """
     )
 
     human = textwrap.dedent(
         """
-        Please create an image based on the following requirements.
-        Just provide the image description, avoid anything else.
+        User's Request: {user_input}
         
-        # User's Request:
-        {user_input}
+        {format_instructions}
         """
     )
 
@@ -70,14 +74,24 @@ class _PromptTemplate:
         )
 
 
+class ImagePrompt(BaseModel):
+    english_prompt: str = Field(
+        description="American english scene description for the image"
+    )
+    chinese_prompt: str = Field(
+        description="Traditional Chinese translation of american english description"
+    )
+
+
 def _build_chain():
     model = _Model.build()
     prompt = _PromptTemplate.build()
-    parser = StrOutputParser()
+    parser = PydanticOutputParser(pydantic_object=ImagePrompt)
 
     _chain = (
             {
                 "user_input": itemgetter("user_input"),
+                "format_instructions": lambda x: parser.get_format_instructions(),
             }
             | prompt
             | model
@@ -87,6 +101,6 @@ def _build_chain():
     return _chain
 
 
-def run_image_prompt_generator_chain(user_input: str) -> str:
-    _chain = _build_chain()
+def run_image_prompt_generator_chain(user_input: str, model: str) -> ImagePrompt:
+    _chain = _build_chain().with_config(configurable={"model": model})
     return _chain.invoke({"user_input": user_input})
