@@ -4,7 +4,7 @@ import fal_client
 
 from app.models import FalAiModel
 
-MAX_PIXELS = 1440
+MAX_PIXELS = 1536
 
 
 class ImageSize(str, enum.Enum):
@@ -13,6 +13,9 @@ class ImageSize(str, enum.Enum):
     portrait_16_9 = "portrait_16_9"
     landscape_4_3 = "landscape_4_3"
     landscape_16_9 = "landscape_16_9"
+    square_1024 = "square_1024"
+    square_1280 = "square_1280"
+    square_1440 = "square_1440"
 
 
 def get_image_size(image_size: ImageSize):
@@ -26,6 +29,12 @@ def get_image_size(image_size: ImageSize):
         return {"width": MAX_PIXELS, "height": int(MAX_PIXELS * 3 / 4)}
     elif image_size == ImageSize.landscape_16_9:
         return {"width": MAX_PIXELS, "height": int(MAX_PIXELS * 9 / 16)}
+    elif image_size == ImageSize.square_1024:
+        return {"width": 1024, "height": 1024}
+    elif image_size == ImageSize.square_1280:
+        return {"width": 1280, "height": 1280}
+    elif image_size == ImageSize.square_1440:
+        return {"width": 1440, "height": 1440}
 
 
 def generate_image(
