@@ -4,7 +4,7 @@ import fal_client
 
 from app.models import FalAiModel
 
-MAX_PIXELS = 1536
+MAX_PIXELS = 1440
 
 
 class ImageSize(str, enum.Enum):
