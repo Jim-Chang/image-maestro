@@ -1,7 +1,4 @@
-import enum
-
-
-class GoogleModel(str, enum.Enum):
+class GoogleModel:
     gemini_15_pro_latest = "gemini-1.5-pro-latest"
     gemini_15_pro_exp_0801 = "gemini-1.5-pro-exp-0801"
     gemini_15_pro_exp_0827 = "gemini-1.5-pro-exp-0827"
@@ -15,7 +12,7 @@ class AnthropicModel:
     claude_3_5_sonnet_20240620 = "claude-3-5-sonnet-20240620"
 
 
-class FalAiModel(str, enum.Enum):
+class FalAiModel:
     flux_pro = "fal-ai/flux-pro"
     flux_dev = "fal-ai/flux/dev"
     flux_schnell = "fal-ai/flux/schnell"
