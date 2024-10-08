@@ -129,6 +129,7 @@ def layout():
                     FalAiModel.flux_dev,
                     FalAiModel.flux_schnell,
                     FalAiModel.flux_pro,
+                    FalAiModel.flux_pro_1_1,
                     FalAiModel.flux_realism,
                 ],
                 index=0,

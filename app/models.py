@@ -13,7 +13,8 @@ class AnthropicModel:
 
 
 class FalAiModel:
-    flux_pro = "fal-ai/flux-pro"
+    flux_pro = "fal-ai/flux-pro/new"
+    flux_pro_1_1 = "fal-ai/flux-pro/v1.1"
     flux_dev = "fal-ai/flux/dev"
     flux_schnell = "fal-ai/flux/schnell"
 
